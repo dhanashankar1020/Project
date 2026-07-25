@@ -7,20 +7,14 @@ class FeatureCard extends StatelessWidget {
   final FeatureModel feature;
   final VoidCallback? onTap;
 
-  const FeatureCard({
-    super.key,
-    required this.feature,
-    this.onTap,
-  });
+  const FeatureCard({super.key, required this.feature, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 3,
       shadowColor: AppColors.shadow,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(18),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       child: InkWell(
         borderRadius: BorderRadius.circular(18),
         onTap: onTap,
@@ -33,14 +27,10 @@ class FeatureCard extends StatelessWidget {
                 width: 68,
                 height: 68,
                 decoration: BoxDecoration(
-                  color: feature.color.withOpacity(0.12),
+                  color: feature.color.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(18),
                 ),
-                child: Icon(
-                  feature.icon,
-                  size: 34,
-                  color: feature.color,
-                ),
+                child: Icon(feature.icon, size: 34, color: feature.color),
               ),
 
               const SizedBox(height: 18),

@@ -6,20 +6,14 @@ class SafePlaceCard extends StatelessWidget {
   final SafePlaceModel place;
   final VoidCallback? onTap;
 
-  const SafePlaceCard({
-    super.key,
-    required this.place,
-    this.onTap,
-  });
+  const SafePlaceCard({super.key, required this.place, this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 3,
       shadowColor: Colors.black12,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
@@ -31,7 +25,7 @@ class SafePlaceCard extends StatelessWidget {
                 width: 65,
                 height: 65,
                 decoration: BoxDecoration(
-                  color: _getColor(place.category).withOpacity(0.15),
+                  color: _getColor(place.category).withValues(alpha: 0.15),
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Icon(
@@ -125,11 +119,7 @@ class SafePlaceCard extends StatelessWidget {
                 ),
               ),
 
-              const Icon(
-                Icons.arrow_forward_ios,
-                color: Colors.grey,
-                size: 18,
-              ),
+              const Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 18),
             ],
           ),
         ),

@@ -6,6 +6,7 @@ import '../../emergency_kit/screens/emergency_kit_screen.dart';
 import '../../first_aid/screens/first_aid_screen.dart';
 import '../../safe_places/screens/safe_places_screen.dart';
 import '../../sos/screens/sos_screens.dart';
+import '../../ai_chat/screens/ai_chat_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -49,6 +50,7 @@ class HomeScreen extends StatelessWidget {
         "icon": Icons.menu_book,
         "color": Colors.teal,
       },
+     
     ];
 
     return Scaffold(
@@ -186,6 +188,14 @@ class HomeScreen extends StatelessWidget {
                     ),
                   );
                         break;
+                       case "SafePlace AI":
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => const AIChatScreen(),
+    ),
+  );
+  break;
   }
 },
                 );

@@ -22,16 +22,11 @@ class ContactCard extends StatelessWidget {
     return Card(
       elevation: 3,
       margin: const EdgeInsets.only(bottom: 15),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(18),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: contact.color.withOpacity(0.15),
-          child: Icon(
-            contact.icon,
-            color: contact.color,
-          ),
+          backgroundColor: contact.color.withValues(alpha: 0.15),
+          child: Icon(contact.icon, color: contact.color),
         ),
 
         title: Row(
@@ -39,18 +34,12 @@ class ContactCard extends StatelessWidget {
             Expanded(
               child: Text(
                 contact.name,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
 
             if (contact.isPrimary)
-              const Icon(
-                Icons.star,
-                color: Colors.amber,
-                size: 20,
-              ),
+              const Icon(Icons.star, color: Colors.amber, size: 20),
           ],
         ),
 
@@ -60,9 +49,7 @@ class ContactCard extends StatelessWidget {
             Text(contact.phoneNumber),
             Text(
               contact.relationship,
-              style: const TextStyle(
-                color: Colors.grey,
-              ),
+              style: const TextStyle(color: Colors.grey),
             ),
           ],
         ),
@@ -88,22 +75,10 @@ class ContactCard extends StatelessWidget {
             }
           },
           itemBuilder: (context) => [
-            const PopupMenuItem(
-              value: "call",
-              child: Text("📞 Call"),
-            ),
-            const PopupMenuItem(
-              value: "primary",
-              child: Text("⭐ Set Primary"),
-            ),
-            const PopupMenuItem(
-              value: "edit",
-              child: Text("✏ Edit"),
-            ),
-            const PopupMenuItem(
-              value: "delete",
-              child: Text("🗑 Delete"),
-            ),
+            const PopupMenuItem(value: "call", child: Text("📞 Call")),
+            const PopupMenuItem(value: "primary", child: Text("⭐ Set Primary")),
+            const PopupMenuItem(value: "edit", child: Text("✏ Edit")),
+            const PopupMenuItem(value: "delete", child: Text("🗑 Delete")),
           ],
         ),
       ),

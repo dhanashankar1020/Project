@@ -60,10 +60,7 @@ class _FirstAidScreenState extends State<FirstAidScreen> {
         centerTitle: true,
         title: const Text(
           "First Aid Guide",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
 
@@ -71,7 +68,6 @@ class _FirstAidScreenState extends State<FirstAidScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-
             TextField(
               controller: _searchController,
               onChanged: _search,
@@ -95,18 +91,13 @@ class _FirstAidScreenState extends State<FirstAidScreen> {
               children: [
                 const Text(
                   "First Aid Library",
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                 ),
                 Chip(
                   backgroundColor: Colors.green.shade100,
                   label: Text(
                     "${topics.length} Topics",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
               ],
@@ -143,15 +134,14 @@ class _FirstAidScreenState extends State<FirstAidScreen> {
                               padding: const EdgeInsets.all(20),
                               child: SingleChildScrollView(
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-
                                     Center(
                                       child: CircleAvatar(
                                         radius: 35,
-                                        backgroundColor:
-                                            color.withOpacity(.15),
+                                        backgroundColor: color.withValues(
+                                          alpha: .15,
+                                        ),
                                         child: Icon(
                                           Icons.medical_services,
                                           color: color,
@@ -198,8 +188,9 @@ class _FirstAidScreenState extends State<FirstAidScreen> {
 
                                     ...topic.steps.map(
                                       (step) => Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 8),
+                                        padding: const EdgeInsets.only(
+                                          bottom: 8,
+                                        ),
                                         child: Row(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -210,9 +201,7 @@ class _FirstAidScreenState extends State<FirstAidScreen> {
                                               size: 20,
                                             ),
                                             const SizedBox(width: 10),
-                                            Expanded(
-                                              child: Text(step),
-                                            ),
+                                            Expanded(child: Text(step)),
                                           ],
                                         ),
                                       ),
@@ -225,8 +214,7 @@ class _FirstAidScreenState extends State<FirstAidScreen> {
                                       padding: const EdgeInsets.all(15),
                                       decoration: BoxDecoration(
                                         color: Colors.red.shade50,
-                                        borderRadius:
-                                            BorderRadius.circular(15),
+                                        borderRadius: BorderRadius.circular(15),
                                       ),
                                       child: Column(
                                         crossAxisAlignment:
@@ -274,27 +262,19 @@ class _FirstAidScreenState extends State<FirstAidScreen> {
                       },
                       child: ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: color.withOpacity(.15),
-                          child: Icon(
-                            Icons.medical_services,
-                            color: color,
-                          ),
+                          backgroundColor: color.withValues(alpha: .15),
+                          child: Icon(Icons.medical_services, color: color),
                         ),
                         title: Text(
                           topic.title,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(
                           topic.description,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        trailing: const Icon(
-                          Icons.arrow_forward_ios,
-                          size: 18,
-                        ),
+                        trailing: const Icon(Icons.arrow_forward_ios, size: 18),
                       ),
                     ),
                   );

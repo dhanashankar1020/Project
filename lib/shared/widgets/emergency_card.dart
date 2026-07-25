@@ -27,7 +27,7 @@ class EmergencyCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(18),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.15),
+              color: Colors.grey.withValues(alpha: 0.15),
               blurRadius: 10,
               offset: const Offset(0, 5),
             ),
@@ -40,12 +40,8 @@ class EmergencyCard extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 28,
-                backgroundColor: color.withOpacity(0.15),
-                child: Icon(
-                  icon,
-                  color: color,
-                  size: 30,
-                ),
+                backgroundColor: color.withValues(alpha: 0.15),
+                child: Icon(icon, color: color, size: 30),
               ),
 
               const SizedBox(height: 14),
@@ -64,10 +60,7 @@ class EmergencyCard extends StatelessWidget {
               Text(
                 subtitle,
                 textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 13,
-                  color: Colors.grey,
-                ),
+                style: const TextStyle(fontSize: 13, color: Colors.grey),
               ),
             ],
           ),

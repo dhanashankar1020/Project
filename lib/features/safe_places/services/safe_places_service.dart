@@ -32,10 +32,15 @@ class SafePlacesService {
 
   /// Get places by category
   List<SafePlaceModel> getPlacesByCategory(String category) {
-    return SafePlacesData.allPlaces.where((place) {
-      return place.category == category;
-    }).toList();
+  if (category == "All") {
+    return getAllPlaces();
   }
+
+  return SafePlacesData.allPlaces.where((place) {
+    return place.category.toLowerCase() ==
+        category.toLowerCase();
+  }).toList();
+}
 
   /// Get government places
   List<SafePlaceModel> getGovernmentPlaces() {
@@ -83,4 +88,35 @@ class SafePlacesService {
   int get24HourPlaceCount() {
     return get24HourPlaces().length;
   }
+  /// AI Recommendation
+List<SafePlaceModel> getRecommendedPlaces(String prompt) {
+  final text = prompt.toLowerCase();
+
+  if (text.contains("hospital") ||
+      text.contains("medical") ||
+      text.contains("injury")) {
+    return getPlacesByCategory("Hospital");
+  }
+
+  if (text.contains("shelter") ||
+      text.contains("cyclone") ||
+      text.contains("flood")) {
+    return getPlacesByCategory("Shelter");
+  }
+
+  if (text.contains("police") ||
+      text.contains("crime")) {
+    return getPlacesByCategory("Police");
+  }
+
+  if (text.contains("fire")) {
+    return getPlacesByCategory("Fire Station");
+  }
+
+  if (text.contains("relief")) {
+    return getPlacesByCategory("Relief Center");
+  }
+
+  return getAllPlaces();
+}
 }

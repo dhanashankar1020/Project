@@ -6,11 +6,7 @@ class FirstAidCard extends StatelessWidget {
   final FirstAidModel topic;
   final VoidCallback onTap;
 
-  const FirstAidCard({
-    super.key,
-    required this.topic,
-    required this.onTap,
-  });
+  const FirstAidCard({super.key, required this.topic, required this.onTap});
 
   Color _cardColor() {
     final colors = [
@@ -33,26 +29,19 @@ class FirstAidCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 8),
       elevation: 3,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(18),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       child: InkWell(
         borderRadius: BorderRadius.circular(18),
         onTap: onTap,
         child: ListTile(
           contentPadding: const EdgeInsets.all(14),
           leading: CircleAvatar(
-            backgroundColor: color.withOpacity(.15),
-            child: Icon(
-              Icons.medical_services,
-              color: color,
-            ),
+            backgroundColor: color.withValues(alpha: .15),
+            child: Icon(Icons.medical_services, color: color),
           ),
           title: Text(
             topic.title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.bold),
           ),
           subtitle: Text(
             topic.description,

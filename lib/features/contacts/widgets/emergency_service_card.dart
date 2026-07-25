@@ -21,29 +21,16 @@ class EmergencyServiceCard extends StatelessWidget {
     return Card(
       elevation: 3,
       margin: const EdgeInsets.only(bottom: 15),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(18),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: color.withOpacity(0.15),
-          child: Icon(
-            icon,
-            color: color,
-          ),
+          backgroundColor: color.withValues(alpha: 0.15),
+          child: Icon(icon, color: color),
         ),
-        title: Text(
-          name,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
         subtitle: Text(phoneNumber),
         trailing: IconButton(
-          icon: const Icon(
-            Icons.call,
-            color: Colors.green,
-          ),
+          icon: const Icon(Icons.call, color: Colors.green),
           onPressed: onCall,
         ),
       ),

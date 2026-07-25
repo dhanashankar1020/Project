@@ -6,10 +6,7 @@ import '../widgets/info_tile.dart';
 class SafePlaceDetailScreen extends StatelessWidget {
   final SafePlaceModel place;
 
-  const SafePlaceDetailScreen({
-    super.key,
-    required this.place,
-  });
+  const SafePlaceDetailScreen({super.key, required this.place});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +24,9 @@ class SafePlaceDetailScreen extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 45,
-              backgroundColor: _getColor(place.category).withOpacity(0.15),
+              backgroundColor: _getColor(
+                place.category,
+              ).withValues(alpha: 0.15),
               child: Icon(
                 _getIcon(place.category),
                 color: _getColor(place.category),
@@ -40,20 +39,14 @@ class SafePlaceDetailScreen extends StatelessWidget {
             Text(
               place.name,
               textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
 
             const SizedBox(height: 8),
 
             Text(
               place.category,
-              style: TextStyle(
-                color: Colors.grey.shade700,
-                fontSize: 16,
-              ),
+              style: TextStyle(color: Colors.grey.shade700, fontSize: 16),
             ),
 
             const SizedBox(height: 25),
@@ -75,9 +68,7 @@ class SafePlaceDetailScreen extends StatelessWidget {
             InfoTile(
               icon: Icons.account_balance,
               title: "Ownership",
-              value: place.isGovernment
-                  ? "Government"
-                  : "Private",
+              value: place.isGovernment ? "Government" : "Private",
               color: Colors.blue,
             ),
 
@@ -111,10 +102,7 @@ class SafePlaceDetailScreen extends StatelessWidget {
               ),
               child: Text(
                 place.description,
-                style: const TextStyle(
-                  fontSize: 16,
-                  height: 1.5,
-                ),
+                style: const TextStyle(fontSize: 16, height: 1.5),
               ),
             ),
 

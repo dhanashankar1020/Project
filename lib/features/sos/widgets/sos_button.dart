@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 class SosButton extends StatelessWidget {
   final VoidCallback onPressed;
 
-  const SosButton({
-    super.key,
-    required this.onPressed,
-  });
+  const SosButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +17,7 @@ class SosButton extends StatelessWidget {
           color: Colors.red,
           boxShadow: [
             BoxShadow(
-              color: Colors.red.withOpacity(0.35),
+              color: Colors.red.withValues(alpha: 0.35),
               blurRadius: 25,
               spreadRadius: 8,
             ),

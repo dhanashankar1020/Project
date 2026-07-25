@@ -12,6 +12,7 @@ class CategoryChip extends StatelessWidget {
     required this.title,
     required this.icon,
     required this.color,
+
     this.isSelected = false,
     this.onTap,
   });
@@ -25,20 +26,14 @@ class CategoryChip extends StatelessWidget {
         borderRadius: BorderRadius.circular(30),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 250),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 10,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           decoration: BoxDecoration(
             color: isSelected ? color : Colors.white,
             borderRadius: BorderRadius.circular(30),
-            border: Border.all(
-              color: color,
-              width: 1.5,
-            ),
+            border: Border.all(color: color, width: 1.5),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(.05),
+                color: Colors.black.withValues(alpha: .05),
                 blurRadius: 5,
                 offset: const Offset(0, 2),
               ),
@@ -47,11 +42,7 @@ class CategoryChip extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(
-                icon,
-                size: 20,
-                color: isSelected ? Colors.white : color,
-              ),
+              Icon(icon, size: 20, color: isSelected ? Colors.white : color),
 
               const SizedBox(width: 8),
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'disaster_details_screen.dart';
 import '../models/disaster_model.dart';
 import '../services/disaster_service.dart';
 
@@ -58,10 +58,7 @@ class _DisasterGuideScreenState extends State<DisasterGuideScreen> {
         centerTitle: true,
         title: const Text(
           "Disaster Guide",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
 
@@ -69,7 +66,6 @@ class _DisasterGuideScreenState extends State<DisasterGuideScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-
             TextField(
               controller: _searchController,
               onChanged: _search,
@@ -115,11 +111,11 @@ class _DisasterGuideScreenState extends State<DisasterGuideScreen> {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(18),
                       onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                              "${disaster.title} details coming soon",
-                            ),
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) =>
+                                DisasterDetailsScreen(disaster: disaster),
                           ),
                         );
                       },
@@ -127,11 +123,11 @@ class _DisasterGuideScreenState extends State<DisasterGuideScreen> {
                         padding: const EdgeInsets.all(16),
                         child: Row(
                           children: [
-
                             CircleAvatar(
                               radius: 28,
-                              backgroundColor:
-                                  _getCardColor(index).withOpacity(.15),
+                              backgroundColor: _getCardColor(
+                                index,
+                              ).withValues(alpha: .15),
                               child: Icon(
                                 Icons.warning_amber_rounded,
                                 color: _getCardColor(index),
@@ -143,10 +139,8 @@ class _DisasterGuideScreenState extends State<DisasterGuideScreen> {
 
                             Expanded(
                               child: Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-
                                   Text(
                                     disaster.title,
                                     style: const TextStyle(
@@ -161,9 +155,7 @@ class _DisasterGuideScreenState extends State<DisasterGuideScreen> {
                                     disaster.description,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      color: Colors.grey,
-                                    ),
+                                    style: const TextStyle(color: Colors.grey),
                                   ),
 
                                   const SizedBox(height: 10),
@@ -179,10 +171,7 @@ class _DisasterGuideScreenState extends State<DisasterGuideScreen> {
                               ),
                             ),
 
-                            const Icon(
-                              Icons.arrow_forward_ios,
-                              size: 18,
-                            ),
+                            const Icon(Icons.arrow_forward_ios, size: 18),
                           ],
                         ),
                       ),
