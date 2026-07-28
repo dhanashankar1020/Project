@@ -8,6 +8,8 @@ class SafePlaceModel {
   final bool isOpen24Hours;
   final bool isGovernment;
   final String image;
+  final double latitude;
+  final double longitude;
 
   const SafePlaceModel({
     required this.id,
@@ -19,6 +21,8 @@ class SafePlaceModel {
     required this.isOpen24Hours,
     required this.isGovernment,
     required this.image,
+    required this.latitude,
+    required this.longitude,
   });
 
   SafePlaceModel copyWith({
@@ -31,6 +35,8 @@ class SafePlaceModel {
     bool? isOpen24Hours,
     bool? isGovernment,
     String? image,
+    double? latitude,
+    double? longitude,
   }) {
     return SafePlaceModel(
       id: id ?? this.id,
@@ -42,6 +48,9 @@ class SafePlaceModel {
       isOpen24Hours: isOpen24Hours ?? this.isOpen24Hours,
       isGovernment: isGovernment ?? this.isGovernment,
       image: image ?? this.image,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
     );
   }
 }
+

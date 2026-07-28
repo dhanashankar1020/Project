@@ -13,6 +13,8 @@ class SheltersData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/community_shelter.png",
+      latitude: 28.6150,
+      longitude: 77.2080,
     ),
 
     SafePlaceModel(
@@ -26,6 +28,8 @@ class SheltersData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/school_shelter.png",
+      latitude: 28.6350,
+      longitude: 77.1950,
     ),
 
     SafePlaceModel(
@@ -39,6 +43,8 @@ class SheltersData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/cyclone_shelter.png",
+      latitude: 28.6000,
+      longitude: 77.2300,
     ),
 
     SafePlaceModel(
@@ -52,6 +58,8 @@ class SheltersData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/flood_camp.png",
+      latitude: 28.5800,
+      longitude: 77.2400,
     ),
 
     SafePlaceModel(
@@ -65,6 +73,8 @@ class SheltersData {
       isOpen24Hours: true,
       isGovernment: false,
       image: "assets/images/safe_places/sports_shelter.png",
+      latitude: 28.6280,
+      longitude: 77.2120,
     ),
 
     SafePlaceModel(
@@ -78,6 +88,8 @@ class SheltersData {
       isOpen24Hours: true,
       isGovernment: false,
       image: "assets/images/safe_places/temple_shelter.png",
+      latitude: 28.6050,
+      longitude: 77.1850,
     ),
 
     SafePlaceModel(
@@ -91,6 +103,8 @@ class SheltersData {
       isOpen24Hours: true,
       isGovernment: false,
       image: "assets/images/safe_places/church_shelter.png",
+      latitude: 28.6220,
+      longitude: 77.2050,
     ),
 
     SafePlaceModel(
@@ -104,6 +118,8 @@ class SheltersData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/college_shelter.png",
+      latitude: 28.6080,
+      longitude: 77.2180,
     ),
 
     SafePlaceModel(
@@ -117,6 +133,8 @@ class SheltersData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/townhall_shelter.png",
+      latitude: 28.6180,
+      longitude: 77.2030,
     ),
 
     SafePlaceModel(
@@ -130,6 +148,8 @@ class SheltersData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/disaster_camp.png",
+      latitude: 28.5700,
+      longitude: 77.2500,
     ),
   ];
 }

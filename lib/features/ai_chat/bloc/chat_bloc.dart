@@ -13,6 +13,7 @@ import '../services/connectivity_service.dart';
 import '../services/gemini_service.dart';
 import '../services/offline_ai_service.dart';
 import '../services/recommendation_scoring_service.dart';
+import '../models/user_intent.dart';
 import '../../safe_places/models/safe_place_model.dart';
 
 /// ChatBloc — the single source of truth for the AI Chat feature.
@@ -280,12 +281,14 @@ class ChatBloc {
         return 'Hospital';
       case SafePlaceType.shelter:
         return 'Shelter';
-      case SafePlaceType.police:
+      case SafePlaceType.policeStation:
         return 'Police';
       case SafePlaceType.fireStation:
         return 'Fire Station';
-      case SafePlaceType.reliefCenter:
+      case SafePlaceType.reliefCamp:
         return 'Relief Center';
+      case SafePlaceType.pharmacy:
+        return 'Pharmacy';
       default:
         return '';
     }

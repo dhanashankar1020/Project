@@ -11,119 +11,93 @@ class AIWelcomeCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
         gradient: LinearGradient(
           colors: [
-            theme.colorScheme.primary,
-            theme.colorScheme.primaryContainer,
+            theme.colorScheme.primary.withValues(alpha: 0.9),
+            theme.colorScheme.primary.withValues(alpha: 0.7),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CircleAvatar(
-            radius: 30,
-            backgroundColor: Colors.white,
-            child: Icon(
-              Icons.support_agent_rounded,
-              size: 32,
-              color: theme.colorScheme.primary,
-            ),
-          ),
-
-          const SizedBox(width: 16),
-
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "SafePlace AI",
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-
-                const SizedBox(height: 10),
-
-                Text(
-                  "Your intelligent emergency safety assistant.\n"
-                  "I'll help you find safe places and provide disaster guidance.",
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    color: Colors.white,
-                    height: 1.4,
-                  ),
-                ),
-
-                const SizedBox(height: 18),
-
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: const [
-                    _FeatureChip(
-                      icon: Icons.local_hospital_rounded,
-                      label: "Hospitals",
-                    ),
-                    _FeatureChip(
-                      icon: Icons.home_work_rounded,
-                      label: "Shelters",
-                    ),
-                    _FeatureChip(
-                      icon: Icons.local_police_rounded,
-                      label: "Police",
-                    ),
-                    _FeatureChip(
-                      icon: Icons.local_fire_department_rounded,
-                      label: "Fire Station",
-                    ),
-                    _FeatureChip(
-                      icon: Icons.route_rounded,
-                      label: "Safe Route",
-                    ),
-                    _FeatureChip(
-                      icon: Icons.warning_amber_rounded,
-                      label: "Emergency Tips",
-                    ),
-                  ],
-                ),
-              ],
-            ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.primary.withValues(alpha: 0.3),
+            blurRadius: 15,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
-    );
-  }
-}
-
-class _FeatureChip extends StatelessWidget {
-  final IconData icon;
-  final String label;
-
-  const _FeatureChip({required this.icon, required this.label});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: .15),
-        borderRadius: BorderRadius.circular(30),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
+      child: Column(
         children: [
-          Icon(icon, size: 18, color: Colors.white),
-          const SizedBox(width: 6),
-          Text(
-            label,
-            style: const TextStyle(
+          CircleAvatar(
+            radius: 32,
+            backgroundColor: Colors.white.withValues(alpha: 0.2),
+            child: const Icon(
+              Icons.auto_awesome,
               color: Colors.white,
-              fontWeight: FontWeight.w600,
+              size: 32,
+            ),
+          ),
+          const SizedBox(height: 12),
+          const Text(
+            "SafePlace AI",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            "Intelligent emergency assistant\nPowered by Google Gemini & Offline AI",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.9),
+              fontSize: 14,
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 6,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.wifi_off, color: Colors.white, size: 14),
+                SizedBox(width: 6),
+                Text(
+                  "Works Offline",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(width: 4),
+                Text(
+                  "•",
+                  style: TextStyle(color: Colors.white70),
+                ),
+                SizedBox(width: 4),
+                Icon(Icons.cloud, color: Colors.white, size: 14),
+                SizedBox(width: 6),
+                Text(
+                  "Gemini Online Ready",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ),
           ),
         ],

@@ -13,6 +13,8 @@ class HospitalsData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/government_hospital.png",
+      latitude: 28.6139,
+      longitude: 77.2090,
     ),
 
     SafePlaceModel(
@@ -26,6 +28,8 @@ class HospitalsData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/district_hospital.png",
+      latitude: 28.6200,
+      longitude: 77.2200,
     ),
 
     SafePlaceModel(
@@ -39,6 +43,8 @@ class HospitalsData {
       isOpen24Hours: false,
       isGovernment: true,
       image: "assets/images/safe_places/phc.png",
+      latitude: 28.5900,
+      longitude: 77.1900,
     ),
 
     SafePlaceModel(
@@ -52,6 +58,8 @@ class HospitalsData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/chc.png",
+      latitude: 28.6300,
+      longitude: 77.1800,
     ),
 
     SafePlaceModel(
@@ -65,6 +73,8 @@ class HospitalsData {
       isOpen24Hours: true,
       isGovernment: false,
       image: "assets/images/safe_places/private_hospital.png",
+      latitude: 28.6050,
+      longitude: 77.2150,
     ),
 
     SafePlaceModel(
@@ -78,6 +88,8 @@ class HospitalsData {
       isOpen24Hours: true,
       isGovernment: false,
       image: "assets/images/safe_places/children_hospital.png",
+      latitude: 28.6250,
+      longitude: 77.2350,
     ),
 
     SafePlaceModel(
@@ -91,6 +103,8 @@ class HospitalsData {
       isOpen24Hours: true,
       isGovernment: false,
       image: "assets/images/safe_places/women_hospital.png",
+      latitude: 28.6400,
+      longitude: 77.2000,
     ),
 
     SafePlaceModel(
@@ -104,6 +118,8 @@ class HospitalsData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/medical_college.png",
+      latitude: 28.6100,
+      longitude: 77.2450,
     ),
 
     SafePlaceModel(
@@ -117,6 +133,8 @@ class HospitalsData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/trauma_center.png",
+      latitude: 28.5950,
+      longitude: 77.2250,
     ),
 
     SafePlaceModel(
@@ -130,6 +148,8 @@ class HospitalsData {
       isOpen24Hours: true,
       isGovernment: false,
       image: "assets/images/safe_places/red_cross_hospital.png",
+      latitude: 28.6500,
+      longitude: 77.2150,
     ),
   ];
 }

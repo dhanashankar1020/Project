@@ -40,31 +40,31 @@ class _ContactsScreenState extends State<ContactsScreen> {
       ),
 
      floatingActionButton: FloatingActionButton(
-  backgroundColor: Colors.blue,
-  child: const Icon(Icons.add, color: Colors.white),
-  onPressed: () async {
-  final newContact = await showDialog<ContactModel>(
-    context: context,
-    builder: (_) => const AddContactDialog(),
-  );
+        backgroundColor: Colors.blue,
+        child: const Icon(Icons.add, color: Colors.white),
+        onPressed: () async {
+          final newContact = await showDialog<ContactModel>(
+            context: context,
+            builder: (_) => const AddContactDialog(),
+          );
 
-  if (!mounted) return;
+          if (!context.mounted) return;
 
-  if (newContact != null) {
-    await _contactsService.addContact(newContact);
+          if (newContact != null) {
+            await _contactsService.addContact(newContact);
 
-    if (!mounted) return;
+            if (!context.mounted) return;
 
-    setState(() {});
+            setState(() {});
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Contact Added Successfully"),
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Contact Added Successfully"),
+              ),
+            );
+          }
+        },
       ),
-    );
-  }
-},
-),
 
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -87,8 +87,8 @@ class _ContactsScreenState extends State<ContactsScreen> {
               icon: service.icon,
               color: service.color,
               onCall: () {
-  PhoneService.makePhoneCall(service.phoneNumber);
-},
+                PhoneService.makePhoneCall(service.phoneNumber);
+              },
             ),
           ),
 
@@ -122,61 +122,61 @@ class _ContactsScreenState extends State<ContactsScreen> {
               contact: contact,
 
               onCall: () {
-  PhoneService.makePhoneCall(contact.phoneNumber);
-},
+                PhoneService.makePhoneCall(contact.phoneNumber);
+              },
               onEdit: () async {
-  final updatedContact = await showDialog<ContactModel>(
-    context: context,
-    builder: (_) => AddContactDialog(contact: contact),
-  );
+                final updatedContact = await showDialog<ContactModel>(
+                  context: context,
+                  builder: (_) => AddContactDialog(contact: contact),
+                );
 
-  if (!mounted) return;
+                if (!context.mounted) return;
 
-  if (updatedContact != null) {
-    await _contactsService.updateContact(updatedContact);
+                if (updatedContact != null) {
+                  await _contactsService.updateContact(updatedContact);
 
-    if (!mounted) return;
+                  if (!context.mounted) return;
 
-    setState(() {});
+                  setState(() {});
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Contact Updated Successfully"),
-      ),
-    );
-  }
-},
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Contact Updated Successfully"),
+                    ),
+                  );
+                }
+              },
 
-             onDelete: () async {
-  final shouldDelete = await showDialog<bool>(
-    context: context,
-    builder: (_) => const DeleteContactDialog(),
-  );
+              onDelete: () async {
+                final shouldDelete = await showDialog<bool>(
+                  context: context,
+                  builder: (_) => const DeleteContactDialog(),
+                );
 
-  if (!context.mounted) return;
+                if (!context.mounted) return;
 
-  if (shouldDelete == true) {
-    await _contactsService.removeContact(contact.id);
+                if (shouldDelete == true) {
+                  await _contactsService.removeContact(contact.id);
 
-if (!mounted) return;
+                  if (!context.mounted) return;
 
-setState(() {});
+                  setState(() {});
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Contact Deleted Successfully"),
-      ),
-    );
-  }
-},
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Contact Deleted Successfully"),
+                    ),
+                  );
+                }
+              },
 
               onPrimary: () async {
-  await _contactsService.togglePrimary(contact.id);
+                await _contactsService.togglePrimary(contact.id);
 
-  if (!mounted) return;
+                if (!context.mounted) return;
 
-  setState(() {});
-},
+                setState(() {});
+              },
             ),
           ),
         ],

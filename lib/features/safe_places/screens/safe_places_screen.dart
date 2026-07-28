@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:google_generative_ai/google_generative_ai.dart'
     show Content, TextPart;
 import '../models/safe_place_model.dart';
@@ -8,6 +10,8 @@ import '../services/safe_places_service.dart';
 import '../widgets/safe_place_card.dart';
 import '../widgets/place_search_bar.dart';
 import '../widgets/category_chip.dart';
+import '../widgets/safe_places_map_view.dart';
+import '../../../services/location_service.dart';
 
 // AI Assistant imports
 import '../../ai_chat/models/chat_message.dart';
@@ -17,6 +21,7 @@ import '../../ai_chat/widgets/ai_welcome_card.dart';
 import '../../ai_chat/services/ai_prompt_service.dart';
 import '../../ai_chat/services/offline_ai_service.dart';
 import '../../ai_chat/services/gemini_service.dart';
+import '../../ai_chat/models/user_intent.dart';
 
 class SafePlacesScreen extends StatefulWidget {
   const SafePlacesScreen({super.key});
@@ -40,6 +45,78 @@ class _SafePlacesScreenState extends State<SafePlacesScreen> {
   final ScrollController _scrollController = ScrollController();
   String _apiKeyValue = '';
 
+  // Voice input state
+  final stt.SpeechToText _speech = stt.SpeechToText();
+  bool _isListening = false;
+  bool _speechAvailable = false;
+
+  // Real-time network safe places state
+  bool _isFetchingRealTime = false;
+  String? _locationStatusMessage;
+
+  Future<void> _fetchRealTimeNearbyPlaces() async {
+    setState(() {
+      _isFetchingRealTime = true;
+    });
+
+    final position = await LocationService.getCurrentLocation();
+
+    if (!context.mounted) return;
+
+    if (position == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Could not access GPS location. Please enable location permissions.'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      setState(() {
+        _isFetchingRealTime = false;
+      });
+      return;
+    }
+
+    final realTimePlaces = await service.fetchRealTimeNearbyPlaces(
+      lat: position.latitude,
+      lng: position.longitude,
+      category: selectedCategory,
+    );
+
+    if (!context.mounted) return;
+
+    setState(() {
+      places = realTimePlaces;
+      _isFetchingRealTime = false;
+      _locationStatusMessage =
+          'Loaded ${realTimePlaces.length} real-time places near (${position.latitude.toStringAsFixed(2)}, ${position.longitude.toStringAsFixed(2)})';
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(_locationStatusMessage!),
+        backgroundColor: Colors.indigo,
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    places = service.getAllPlaces();
+    _loadSettings();
+    _initSpeech();
+  }
+
+  Future<void> _initSpeech() async {
+    try {
+      _speechAvailable = await _speech.initialize();
+      if (mounted) setState(() {});
+    } catch (e) {
+      debugPrint('Speech initialization failed: $e');
+      _speechAvailable = false;
+    }
+  }
+
   final List<Map<String, dynamic>> _suggestions = [
     {"title": "Nearest Shelter", "icon": Icons.home_work},
     {"title": "Find Hospitals", "icon": Icons.local_hospital},
@@ -48,12 +125,7 @@ class _SafePlacesScreenState extends State<SafePlacesScreen> {
     {"title": "Flood Preparedness", "icon": Icons.flood},
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    places = service.getAllPlaces();
-    _loadSettings();
-  }
+
 
   Future<void> _loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
@@ -116,7 +188,16 @@ class _SafePlacesScreenState extends State<SafePlacesScreen> {
         // Enrich Gemini response with recommended places if user asked for safe places
         if (intent.isSafePlace) {
           final category = _getCategoryFromIntent(intent.safePlaceType);
-          recommendedPlaces = service.getPlacesByCategory(category);
+          final pos = await LocationService.getCurrentLocation();
+          if (pos != null) {
+            recommendedPlaces = await service.fetchRealTimeNearbyPlaces(
+              lat: pos.latitude,
+              lng: pos.longitude,
+              category: category,
+            );
+          } else {
+            recommendedPlaces = service.getPlacesByCategory(category);
+          }
         }
       } else {
         // 3. Offline: Use Offline AI Service
@@ -125,7 +206,21 @@ class _SafePlacesScreenState extends State<SafePlacesScreen> {
           intent,
         );
         replyText = offlineResponse.text;
-        recommendedPlaces = offlineResponse.recommendedPlaces;
+        if (intent.isSafePlace) {
+          final category = _getCategoryFromIntent(intent.safePlaceType);
+          final pos = await LocationService.getCurrentLocation();
+          if (pos != null) {
+            recommendedPlaces = await service.fetchRealTimeNearbyPlaces(
+              lat: pos.latitude,
+              lng: pos.longitude,
+              category: category,
+            );
+          } else {
+            recommendedPlaces = offlineResponse.recommendedPlaces ?? service.getPlacesByCategory(category);
+          }
+        } else {
+          recommendedPlaces = offlineResponse.recommendedPlaces;
+        }
       }
     } catch (e) {
       debugPrint("Gemini call failed, falling back to offline: $e");
@@ -135,7 +230,21 @@ class _SafePlacesScreenState extends State<SafePlacesScreen> {
       );
       replyText =
           "⚠️ *(Gemini failed. Using offline backup)*\n\n${offlineResponse.text}";
-      recommendedPlaces = offlineResponse.recommendedPlaces;
+      if (intent.isSafePlace) {
+        final category = _getCategoryFromIntent(intent.safePlaceType);
+        final pos = await LocationService.getCurrentLocation();
+        if (pos != null) {
+          recommendedPlaces = await service.fetchRealTimeNearbyPlaces(
+            lat: pos.latitude,
+            lng: pos.longitude,
+            category: category,
+          );
+        } else {
+          recommendedPlaces = offlineResponse.recommendedPlaces ?? service.getPlacesByCategory(category);
+        }
+      } else {
+        recommendedPlaces = offlineResponse.recommendedPlaces;
+      }
     } finally {
       final aiMsg = ChatMessage(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -161,12 +270,14 @@ class _SafePlacesScreenState extends State<SafePlacesScreen> {
         return "Hospital";
       case SafePlaceType.shelter:
         return "Shelter";
-      case SafePlaceType.police:
+      case SafePlaceType.policeStation:
         return "Police";
       case SafePlaceType.fireStation:
         return "Fire Station";
-      case SafePlaceType.reliefCenter:
+      case SafePlaceType.reliefCamp:
         return "Relief Center";
+      case SafePlaceType.pharmacy:
+        return "Pharmacy";
       default:
         return "";
     }
@@ -263,18 +374,69 @@ class _SafePlacesScreenState extends State<SafePlacesScreen> {
     );
   }
 
+  void _startListening() async {
+    if (!_speechAvailable) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Speech recognition not available on this device.'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
+    try {
+      setState(() {
+        _isListening = true;
+      });
+
+      await _speech.listen(
+        onResult: (result) {
+          setState(() {
+            _chatController.text = result.recognizedWords;
+          });
+          // Auto-send when final result is ready and text is non-empty
+          if (result.finalResult &&
+              result.recognizedWords.trim().isNotEmpty) {
+            _handleSendMessage(result.recognizedWords);
+          }
+        },
+        listenFor: const Duration(seconds: 30),
+        partialResults: true,
+        cancelOnError: true,
+        localeId: 'en_IN',
+      );
+    } catch (e) {
+      debugPrint('Speech listening error: $e');
+      setState(() {
+        _isListening = false;
+      });
+    }
+  }
+
+  void _stopListening() async {
+    try {
+      await _speech.stop();
+    } catch (_) {}
+    setState(() {
+      _isListening = false;
+    });
+  }
+
   @override
   void dispose() {
     searchController.dispose();
     _chatController.dispose();
     _scrollController.dispose();
+    _speech.stop();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
+      initialIndex: 1,
       child: Scaffold(
         backgroundColor: const Color(0xFFF5F7FA),
         appBar: AppBar(
@@ -289,6 +451,7 @@ class _SafePlacesScreenState extends State<SafePlacesScreen> {
             tabs: [
               Tab(icon: Icon(Icons.chat_bubble), text: "AI Assistant"),
               Tab(icon: Icon(Icons.list), text: "Safe Places List"),
+              Tab(icon: Icon(Icons.map), text: "Map View"),
             ],
           ),
           actions: [
@@ -337,7 +500,7 @@ class _SafePlacesScreenState extends State<SafePlacesScreen> {
           ],
         ),
         body: TabBarView(
-          children: [_buildAssistantTab(), _buildDirectoryTab()],
+          children: [_buildAssistantTab(), _buildDirectoryTab(), _buildMapTab()],
         ),
       ),
     );
@@ -476,6 +639,24 @@ class _SafePlacesScreenState extends State<SafePlacesScreen> {
                     ),
                   ),
                 ),
+                // Voice Input Button
+                if (_speechAvailable && !_isAiLoading)
+                  Padding(
+                    padding: const EdgeInsets.only(right: 6),
+                    child: FloatingActionButton.small(
+                      elevation: 2,
+                      backgroundColor:
+                          _isListening ? Colors.red : Colors.indigo.shade100,
+                      foregroundColor:
+                          _isListening ? Colors.white : Colors.indigo,
+                      onPressed:
+                          _isListening ? _stopListening : _startListening,
+                      tooltip: _isListening ? 'Stop listening' : 'Voice input',
+                      child: _isListening
+                          ? const Icon(Icons.mic, size: 18)
+                          : const Icon(Icons.keyboard_voice, size: 18),
+                    ),
+                  ),
                 const SizedBox(width: 8),
                 FloatingActionButton.small(
                   elevation: 2,
@@ -679,6 +860,10 @@ class _SafePlacesScreenState extends State<SafePlacesScreen> {
     }
   }
 
+  Widget _buildMapTab() {
+    return SafePlacesMapView(service: service);
+  }
+
   Widget _buildDirectoryTab() {
     return SingleChildScrollView(
       child: Column(
@@ -763,41 +948,99 @@ class _SafePlacesScreenState extends State<SafePlacesScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
               children: [
-                const Icon(Icons.location_on, color: Colors.indigo),
+                Expanded(
+                  child: Row(
+                    children: [
+                      const Icon(Icons.location_on, color: Colors.indigo),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          "${places.length} Safe Places",
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 17,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 const SizedBox(width: 8),
-                Text(
-                  "${places.length} Safe Places",
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 17,
+                Flexible(
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.indigo,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    onPressed: _isFetchingRealTime ? null : _fetchRealTimeNearbyPlaces,
+                    icon: _isFetchingRealTime
+                        ? const SizedBox(
+                            width: 14,
+                            height: 14,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Icon(Icons.my_location, size: 16),
+                    label: Text(
+                      _isFetchingRealTime ? "Fetching..." : "Live Nearby (GPS)",
+                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(16),
-            itemCount: places.length,
-            itemBuilder: (context, index) {
-              final place = places[index];
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: SafePlaceCard(
-                  place: place,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => SafePlaceDetailScreen(place: place),
-                      ),
-                    );
-                  },
-                ),
-              );
-            },
-          ),
+          if (places.isEmpty)
+            Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                children: [
+                  const Icon(Icons.location_off, size: 48, color: Colors.grey),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'No safe places found.',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    'Try switching categories or tap “Live Nearby (GPS)” to refresh.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.grey.shade600),
+                  ),
+                ],
+              ),
+            )
+          else
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(16),
+              itemCount: places.length,
+              itemBuilder: (context, index) {
+                final place = places[index];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: SafePlaceCard(
+                    place: place,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => SafePlaceDetailScreen(place: place),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
         ],
       ),
     );

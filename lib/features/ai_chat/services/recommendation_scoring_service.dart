@@ -2,6 +2,7 @@ import 'dart:math';
 
 import '../../safe_places/models/safe_place_model.dart';
 import '../../safe_places/services/safe_places_service.dart';
+import '../../../services/location_service.dart';
 
 /// A scored safe place with its relevance score.
 class ScoredPlace {
@@ -101,29 +102,14 @@ class RecommendationScoringService {
     double? userLat,
     double? userLng,
   ) {
-    // The model doesn't currently carry lat/lng fields — return neutral score.
-    // When you add latitude/longitude to SafePlaceModel (Phase 2), replace
-    // this with the Haversine calculation below.
     if (userLat == null || userLng == null) return 0.5;
 
-    // ---- Haversine placeholder (activate after adding lat/lng to model) ----
-    // final distKm = _haversine(userLat, userLng, place.latitude, place.longitude);
-    // return max(0.0, 1.0 - (distKm / 10.0)); // 10.0 km max radius
-    return 0.5;
+    final distKm = LocationService.calculateDistanceKm(
+      userLat,
+      userLng,
+      place.latitude,
+      place.longitude,
+    );
+    return max(0.0, 1.0 - (distKm / 10.0)); // 10.0 km max radius
   }
-
-  /// Haversine formula — computes great-circle distance in kilometres.
-  // ignore: unused_element
-  double _haversine(double lat1, double lon1, double lat2, double lon2) {
-    const double earthRadiusKm = 6371;
-    final double dLat = _rad(lat2 - lat1);
-    final double dLon = _rad(lon2 - lon1);
-    final double a =
-        sin(dLat / 2) * sin(dLat / 2) +
-        cos(_rad(lat1)) * cos(_rad(lat2)) * sin(dLon / 2) * sin(dLon / 2);
-    final double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-    return earthRadiusKm * c;
-  }
-
-  double _rad(double deg) => deg * pi / 180;
 }

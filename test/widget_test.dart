@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shankar2/main.dart';
 import 'package:shankar2/features/ai_chat/services/ai_prompt_service.dart';
 import 'package:shankar2/features/ai_chat/services/offline_ai_service.dart';
+import 'package:shankar2/features/ai_chat/models/user_intent.dart';
 
 void main() {
   group('AI Assistant Tests', () {

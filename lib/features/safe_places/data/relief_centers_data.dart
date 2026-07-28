@@ -13,6 +13,8 @@ class ReliefCentersData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/district_relief.png",
+      latitude: 28.6160,
+      longitude: 77.2100,
     ),
 
     SafePlaceModel(
@@ -26,6 +28,8 @@ class ReliefCentersData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/state_relief.png",
+      latitude: 28.6130,
+      longitude: 77.2060,
     ),
 
     SafePlaceModel(
@@ -39,6 +43,8 @@ class ReliefCentersData {
       isOpen24Hours: true,
       isGovernment: false,
       image: "assets/images/safe_places/redcross_relief.png",
+      latitude: 28.6210,
+      longitude: 77.2130,
     ),
 
     SafePlaceModel(
@@ -52,6 +58,8 @@ class ReliefCentersData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/community_relief.png",
+      latitude: 28.6270,
+      longitude: 77.1950,
     ),
 
     SafePlaceModel(
@@ -65,6 +73,8 @@ class ReliefCentersData {
       isOpen24Hours: true,
       isGovernment: false,
       image: "assets/images/safe_places/ngo_relief.png",
+      latitude: 28.5950,
+      longitude: 77.2180,
     ),
 
     SafePlaceModel(
@@ -78,6 +88,8 @@ class ReliefCentersData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/medical_relief.png",
+      latitude: 28.6030,
+      longitude: 77.2220,
     ),
 
     SafePlaceModel(
@@ -91,6 +103,8 @@ class ReliefCentersData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/food_relief.png",
+      latitude: 28.6340,
+      longitude: 77.1900,
     ),
 
     SafePlaceModel(
@@ -104,6 +118,8 @@ class ReliefCentersData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/women_relief.png",
+      latitude: 28.6190,
+      longitude: 77.2160,
     ),
 
     SafePlaceModel(
@@ -117,6 +133,8 @@ class ReliefCentersData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/child_relief.png",
+      latitude: 28.6230,
+      longitude: 77.2080,
     ),
 
     SafePlaceModel(
@@ -130,6 +148,8 @@ class ReliefCentersData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/rehabilitation_center.png",
+      latitude: 28.6070,
+      longitude: 77.2280,
     ),
   ];
 }

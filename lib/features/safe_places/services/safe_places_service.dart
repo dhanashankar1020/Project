@@ -1,5 +1,7 @@
 import '../data/safe_places_data.dart';
 import '../models/safe_place_model.dart';
+import '../../../services/location_service.dart';
+import '../../../services/network_safe_places_service.dart';
 
 class SafePlacesService {
   SafePlacesService._();
@@ -32,15 +34,24 @@ class SafePlacesService {
 
   /// Get places by category
   List<SafePlaceModel> getPlacesByCategory(String category) {
-  if (category == "All") {
-    return getAllPlaces();
-  }
+    if (category.trim().isEmpty || category.toLowerCase() == 'all') {
+      return getAllPlaces();
+    }
 
-  return SafePlacesData.allPlaces.where((place) {
-    return place.category.toLowerCase() ==
-        category.toLowerCase();
-  }).toList();
-}
+    final normalizedCategory = category.toLowerCase().trim();
+
+    return SafePlacesData.allPlaces.where((place) {
+      final placeCategory = place.category.toLowerCase();
+      return placeCategory == normalizedCategory ||
+          (normalizedCategory == 'police' && placeCategory.contains('police')) ||
+          (normalizedCategory == 'fire' && placeCategory.contains('fire')) ||
+          (normalizedCategory == 'fire station' && placeCategory.contains('fire')) ||
+          (normalizedCategory == 'shelter' && placeCategory.contains('shelter')) ||
+          (normalizedCategory == 'hospital' && placeCategory.contains('hospital')) ||
+          (normalizedCategory == 'relief' && placeCategory.contains('relief')) ||
+          (normalizedCategory == 'relief center' && placeCategory.contains('relief'));
+    }).toList();
+  }
 
   /// Get government places
   List<SafePlaceModel> getGovernmentPlaces() {
@@ -119,4 +130,37 @@ List<SafePlaceModel> getRecommendedPlaces(String prompt) {
 
   return getAllPlaces();
 }
+
+  /// Fetches real-time safe places from OpenStreetMap Overpass API near [lat] and [lng].
+  /// Automatically sorts places by distance and falls back to local data if offline or unavailable.
+  Future<List<SafePlaceModel>> fetchRealTimeNearbyPlaces({
+    required double lat,
+    required double lng,
+    String category = 'All',
+  }) async {
+    final networkPlaces = await NetworkSafePlacesService.instance.fetchNearbySafePlaces(
+      lat: lat,
+      lng: lng,
+      category: category,
+    );
+
+    if (networkPlaces.isNotEmpty) {
+      networkPlaces.sort((a, b) {
+        final distA = LocationService.calculateDistanceKm(lat, lng, a.latitude, a.longitude);
+        final distB = LocationService.calculateDistanceKm(lat, lng, b.latitude, b.longitude);
+        return distA.compareTo(distB);
+      });
+      return networkPlaces;
+    }
+
+    // Fallback to local dataset sorted by distance
+    final localPlaces = getPlacesByCategory(category);
+    localPlaces.sort((a, b) {
+      final distA = LocationService.calculateDistanceKm(lat, lng, a.latitude, a.longitude);
+      final distB = LocationService.calculateDistanceKm(lat, lng, b.latitude, b.longitude);
+      return distA.compareTo(distB);
+    });
+
+    return localPlaces;
+  }
 }

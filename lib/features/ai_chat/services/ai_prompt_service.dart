@@ -1,268 +1,343 @@
-enum EmergencyType {
-  earthquake,
-  flood,
-  fire,
-  cyclone,
-  tsunami,
-  heatwave,
-  landslide,
-  lightning,
-  thunderstorm,
-  volcanicEruption,
-  chemicalLeak,
-  pandemic,
-  coldWave,
-  snowstorm,
-  tornado,
-  roadAccident,
-  none,
-}
+import '../models/user_intent.dart';
 
-enum FirstAidType {
-  cardiacCPR,
-  injury,
-  burn,
-  poisoning,
-  drowning,
-  childCare,
-  choking,
-  none,
-}
-
-enum SafePlaceType {
-  hospital,
-  shelter,
-  police,
-  fireStation,
-  reliefCenter,
-  none,
-}
-
-class DetectedIntent {
-  final EmergencyType emergencyType;
-  final FirstAidType firstAidType;
-  final SafePlaceType safePlaceType;
-
-  DetectedIntent({
-    this.emergencyType = EmergencyType.none,
-    this.firstAidType = FirstAidType.none,
-    this.safePlaceType = SafePlaceType.none,
-  });
-
-  bool get isEmergency => emergencyType != EmergencyType.none;
-  bool get isFirstAid => firstAidType != FirstAidType.none;
-  bool get isSafePlace => safePlaceType != SafePlaceType.none;
-  bool get hasAnyIntent => isEmergency || isFirstAid || isSafePlace;
-}
-
+/// Service that detects user intent from natural language prompts.
+/// Uses keyword matching to classify queries into safe place, first aid,
+/// or emergency categories.
 class AIPromptService {
   AIPromptService._();
-
   static final AIPromptService instance = AIPromptService._();
 
-  /// Analyze user input to determine the emergency type, first aid type, or safe place type.
-  DetectedIntent detectIntent(String query) {
-    final text = query.toLowerCase();
+  /// Detects the user's intent from the given [query] string.
+  UserIntent detectIntent(String query) {
+    final lowerQuery = query.toLowerCase().trim();
 
-    // 1. Detect Safe Place Intent
-    SafePlaceType safePlaceType = SafePlaceType.none;
-    if (_matches(text, [
-      'hospital',
-      'medical',
-      'doctor',
-      'clinic',
-      'first aid room',
-      'treatment center',
-    ])) {
-      safePlaceType = SafePlaceType.hospital;
-    } else if (_matches(text, [
-      'shelter',
-      'refuge',
-      'stay safe',
-      'evacuate to',
-      'temporary stay',
-      'camp ground',
-    ])) {
-      safePlaceType = SafePlaceType.shelter;
-    } else if (_matches(text, [
-      'police',
-      'cop',
-      'security',
-      'law enforcement',
-      'station house',
-    ])) {
-      safePlaceType = SafePlaceType.police;
-    } else if (_matches(text, [
-      'fire station',
-      'firefighter',
-      'fire department',
-      'fire engine',
-      'fire truck',
-    ])) {
-      safePlaceType = SafePlaceType.fireStation;
-    } else if (_matches(text, [
-      'relief',
-      'ration',
-      'distribution center',
-      'food supply',
-      'aid center',
-    ])) {
-      safePlaceType = SafePlaceType.reliefCenter;
-    }
+    // Check for safe place intents
+    final safePlaceResult = _detectSafePlaceIntent(lowerQuery);
+    if (safePlaceResult != null) return safePlaceResult;
 
-    // 2. Detect First Aid Intent
-    FirstAidType firstAidType = FirstAidType.none;
-    if (_matches(text, [
-      'cpr',
-      'cardiac',
-      'heart attack',
-      'chest pain',
-      'cardiopulmonary',
-    ])) {
-      firstAidType = FirstAidType.cardiacCPR;
-    } else if (_matches(text, [
-      'burn',
-      'scalding',
-      'fire burn',
-      'chemical burn',
-    ])) {
-      firstAidType = FirstAidType.burn;
-    } else if (_matches(text, [
-      'poison',
-      'toxic',
-      'swallowed',
-      'chemical ingestion',
-    ])) {
-      firstAidType = FirstAidType.poisoning;
-    } else if (_matches(text, [
-      'drown',
-      'water rescue',
-      'drowned',
-      'submerged',
-    ])) {
-      firstAidType = FirstAidType.drowning;
-    } else if (_matches(text, ['child', 'baby', 'infant', 'pediatric'])) {
-      firstAidType = FirstAidType.childCare;
-    } else if (_matches(text, [
-      'chok',
-      'blocked airway',
-      'heimlich',
-      'swallowed object',
-    ])) {
-      firstAidType = FirstAidType.choking;
-    } else if (_matches(text, [
-      'injury',
-      'bleeding',
-      'cut',
-      'wound',
-      'fracture',
-      'broken bone',
-      'snake bite',
-      'electric shock',
-      'sprain',
-      'bandage',
-    ])) {
-      firstAidType = FirstAidType.injury;
-    }
+    // Check for first aid intents
+    final firstAidResult = _detectFirstAidIntent(lowerQuery);
+    if (firstAidResult != null) return firstAidResult;
 
-    // 3. Detect Emergency Type Intent
-    EmergencyType emergencyType = EmergencyType.none;
-    if (_matches(text, [
-      'earthquake',
-      'quake',
-      'shaking',
-      'tremor',
-      'aftershock',
-    ])) {
-      emergencyType = EmergencyType.earthquake;
-    } else if (_matches(text, [
-      'flood',
-      'inundation',
-      'water rise',
-      'overflowing',
-    ])) {
-      emergencyType = EmergencyType.flood;
-    } else if (_matches(text, ['fire', 'flame', 'blaze', 'conflagration']) &&
-        firstAidType != FirstAidType.burn) {
-      emergencyType = EmergencyType.fire;
-    } else if (_matches(text, ['cyclone', 'hurricane', 'typhoon', 'gale'])) {
-      emergencyType = EmergencyType.cyclone;
-    } else if (_matches(text, ['tsunami', 'tidal wave', 'harbor wave'])) {
-      emergencyType = EmergencyType.tsunami;
-    } else if (_matches(text, [
-      'heatwave',
-      'extreme heat',
-      'sunstroke',
-      'hot weather',
-    ])) {
-      emergencyType = EmergencyType.heatwave;
-    } else if (_matches(text, [
-      'landslide',
-      'mudslide',
-      'rockfall',
-      'avalanche',
-    ])) {
-      emergencyType = EmergencyType.landslide;
-    } else if (_matches(text, ['lightning', 'thunderbolt'])) {
-      emergencyType = EmergencyType.lightning;
-    } else if (_matches(text, ['thunderstorm', 'thunder', 'storm', 'hail'])) {
-      emergencyType = EmergencyType.thunderstorm;
-    } else if (_matches(text, ['volcan', 'eruption', 'lava', 'ashfall'])) {
-      emergencyType = EmergencyType.volcanicEruption;
-    } else if (_matches(text, [
-      'chemical',
-      'gas leak',
-      'leakage',
-      'toxic leak',
-    ])) {
-      emergencyType = EmergencyType.chemicalLeak;
-    } else if (_matches(text, [
-      'pandemic',
-      'outbreak',
-      'virus',
-      'quarantine',
-      'epidemic',
-    ])) {
-      emergencyType = EmergencyType.pandemic;
-    } else if (_matches(text, [
-      'cold wave',
-      'extreme cold',
-      'frost',
-      'freeze',
-    ])) {
-      emergencyType = EmergencyType.coldWave;
-    } else if (_matches(text, [
-      'blizzard',
-      'snowstorm',
-      'heavy snow',
-      'snow drift',
-    ])) {
-      emergencyType = EmergencyType.snowstorm;
-    } else if (_matches(text, ['tornado', 'twister', 'funnel cloud'])) {
-      emergencyType = EmergencyType.tornado;
-    } else if (_matches(text, [
-      'accident',
-      'car crash',
-      'road accident',
-      'collision',
-      'vehicular',
-    ])) {
-      emergencyType = EmergencyType.roadAccident;
-    }
+    // Check for emergency/disaster intents
+    final emergencyResult = _detectEmergencyIntent(lowerQuery);
+    if (emergencyResult != null) return emergencyResult;
 
-    return DetectedIntent(
-      emergencyType: emergencyType,
-      firstAidType: firstAidType,
-      safePlaceType: safePlaceType,
+    // General chat fallback
+    return UserIntent(
+      rawQuery: query,
+      isGeneralChat: true,
     );
   }
 
-  bool _matches(String text, List<String> keywords) {
-    for (final kw in keywords) {
-      if (text.contains(kw)) {
-        return true;
-      }
+  UserIntent? _detectSafePlaceIntent(String query) {
+    // Hospital detection
+    if (_containsAny(query, [
+      'hospital', 'clinic', 'medical center', 'doctor', 'emergency room',
+      'er', 'healthcare', 'medic', 'treatment center',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        safePlaceType: SafePlaceType.hospital,
+        isSafePlace: true,
+      );
     }
-    return false;
+
+    // Shelter detection
+    if (_containsAny(query, [
+      'shelter', 'storm shelter', 'evacuation center', 'safe house',
+      'refuge', 'emergency shelter', 'relief camp', 'camp',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        safePlaceType: SafePlaceType.shelter,
+        isSafePlace: true,
+      );
+    }
+
+    // Police station detection
+    if (_containsAny(query, [
+      'police', 'police station', 'police department', 'sheriff',
+      'law enforcement', 'cop',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        safePlaceType: SafePlaceType.policeStation,
+        isSafePlace: true,
+      );
+    }
+
+    // Fire station detection
+    if (_containsAny(query, [
+      'fire station', 'fire department', 'firefighter', 'fire brigade',
+      'fire house',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        safePlaceType: SafePlaceType.fireStation,
+        isSafePlace: true,
+      );
+    }
+
+    // Pharmacy detection
+    if (_containsAny(query, [
+      'pharmacy', 'drug store', 'chemist', 'medicine store',
+      'medical store', 'apothecary',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        safePlaceType: SafePlaceType.pharmacy,
+        isSafePlace: true,
+      );
+    }
+
+    // Generic safe place detection
+    if (_containsAny(query, [
+      'safe place', 'safe area', 'nearby', 'find place', 'where can i go',
+      'emergency location', 'help near me', 'nearest',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        safePlaceType: SafePlaceType.unknown,
+        isSafePlace: true,
+      );
+    }
+
+    return null;
+  }
+
+  UserIntent? _detectFirstAidIntent(String query) {
+    // CPR / Cardiac
+    if (_containsAny(query, [
+      'cpr', 'cardiac', 'heart attack', 'cardiopulmonary', 'resuscitation',
+      'chest compression', 'heart stopped',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        firstAidType: FirstAidType.cardiacCPR,
+        isFirstAid: true,
+      );
+    }
+
+    // Burn
+    if (_containsAny(query, [
+      'burn', 'burned', 'scald', 'scalding', 'fire injury',
+      'minor burn', 'chemical burn',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        firstAidType: FirstAidType.burn,
+        isFirstAid: true,
+      );
+    }
+
+    // Bleeding
+    if (_containsAny(query, [
+      'bleeding', 'wound', 'cut', 'hemorrhage', 'blood', 'injury',
+      'gash', 'laceration',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        firstAidType: FirstAidType.bleeding,
+        isFirstAid: true,
+      );
+    }
+
+    // Fracture
+    if (_containsAny(query, [
+      'fracture', 'broken bone', 'bone', 'sprain', 'dislocation',
+      'fractured', 'cracked bone',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        firstAidType: FirstAidType.fracture,
+        isFirstAid: true,
+      );
+    }
+
+    // Choking
+    if (_containsAny(query, [
+      'choking', 'choke', 'heimlich', 'can\'t breathe',
+      'blocked airway', 'airway obstruction',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        firstAidType: FirstAidType.choking,
+        isFirstAid: true,
+      );
+    }
+
+    // Poisoning
+    if (_containsAny(query, [
+      'poisoning', 'poison', 'overdose', 'toxic', 'ingested poison',
+      'poison control', 'swallowed poison',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        firstAidType: FirstAidType.poisoning,
+        isFirstAid: true,
+      );
+    }
+
+    // Drowning
+    if (_containsAny(query, [
+      'drowning', 'drown', 'near drowning', 'water rescue',
+      'underwater', 'submerged',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        firstAidType: FirstAidType.drowning,
+        isFirstAid: true,
+      );
+    }
+
+    // Shock
+    if (_containsAny(query, [
+      'shock', 'anaphylactic', 'anaphylaxis',
+      'severe allergic reaction', 'going into shock',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        firstAidType: FirstAidType.shock,
+        isFirstAid: true,
+      );
+    }
+
+    // Seizure
+    if (_containsAny(query, [
+      'seizure', 'convulsion', 'fitting', 'epileptic', 'epilepsy',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        firstAidType: FirstAidType.seizure,
+        isFirstAid: true,
+      );
+    }
+
+    return null;
+  }
+
+  UserIntent? _detectEmergencyIntent(String query) {
+    // Earthquake
+    if (_containsAny(query, [
+      'earthquake', 'quake', 'seismic', 'tremor', 'temblor',
+      'ground shaking', 'seismic activity',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        emergencyType: EmergencyType.earthquake,
+        isEmergency: true,
+      );
+    }
+
+    // Flood
+    if (_containsAny(query, [
+      'flood', 'flooding', 'flash flood', 'flooded', 'rising water',
+      'overflow', 'inundation',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        emergencyType: EmergencyType.flood,
+        isEmergency: true,
+      );
+    }
+
+    // Hurricane / Cyclone
+    if (_containsAny(query, [
+      'hurricane', 'cyclone', 'typhoon', 'tropical storm',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        emergencyType: EmergencyType.hurricane,
+        isEmergency: true,
+      );
+    }
+
+    // Tornado
+    if (_containsAny(query, [
+      'tornado', 'twister', 'funnel cloud', 'cyclone',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        emergencyType: EmergencyType.tornado,
+        isEmergency: true,
+      );
+    }
+
+    // Tsunami
+    if (_containsAny(query, [
+      'tsunami', 'tidal wave', 'seismic wave',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        emergencyType: EmergencyType.tsunami,
+        isEmergency: true,
+      );
+    }
+
+    // Wildfire
+    if (_containsAny(query, [
+      'wildfire', 'forest fire', 'bushfire', 'wild fire',
+      'brush fire', 'inferno',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        emergencyType: EmergencyType.wildfire,
+        isEmergency: true,
+      );
+    }
+
+    // Landslide
+    if (_containsAny(query, [
+      'landslide', 'mudslide', 'rockslide', 'land slip',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        emergencyType: EmergencyType.landslide,
+        isEmergency: true,
+      );
+    }
+
+    // Blizzard / Snowstorm
+    if (_containsAny(query, [
+      'blizzard', 'snowstorm', 'heavy snow', 'ice storm',
+      'snow emergency', 'winter storm',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        emergencyType: EmergencyType.blizzard,
+        isEmergency: true,
+      );
+    }
+
+    // Heatwave
+    if (_containsAny(query, [
+      'heatwave', 'heat wave', 'extreme heat', 'heat stroke',
+      'high temperature',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        emergencyType: EmergencyType.heatwave,
+        isEmergency: true,
+      );
+    }
+
+    // Pandemic
+    if (_containsAny(query, [
+      'pandemic', 'epidemic', 'outbreak', 'virus', 'quarantine',
+      'infection spread', 'disease outbreak',
+    ])) {
+      return UserIntent(
+        rawQuery: query,
+        emergencyType: EmergencyType.pandemic,
+        isEmergency: true,
+      );
+    }
+
+    return null;
+  }
+
+  bool _containsAny(String query, List<String> keywords) {
+    return keywords.any((keyword) => RegExp(r'\b' + RegExp.escape(keyword) + r'\b').hasMatch(query));
   }
 }

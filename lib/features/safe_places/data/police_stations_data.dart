@@ -13,6 +13,8 @@ class PoliceStationsData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/central_police.png",
+      latitude: 28.6140,
+      longitude: 77.2100,
     ),
 
     SafePlaceModel(
@@ -26,6 +28,8 @@ class PoliceStationsData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/north_police.png",
+      latitude: 28.6400,
+      longitude: 77.2000,
     ),
 
     SafePlaceModel(
@@ -39,6 +43,8 @@ class PoliceStationsData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/south_police.png",
+      latitude: 28.5800,
+      longitude: 77.2100,
     ),
 
     SafePlaceModel(
@@ -52,6 +58,8 @@ class PoliceStationsData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/east_police.png",
+      latitude: 28.6100,
+      longitude: 77.2400,
     ),
 
     SafePlaceModel(
@@ -65,6 +73,8 @@ class PoliceStationsData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/west_police.png",
+      latitude: 28.6100,
+      longitude: 77.1800,
     ),
 
     SafePlaceModel(
@@ -78,6 +88,8 @@ class PoliceStationsData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/highway_police.png",
+      latitude: 28.5900,
+      longitude: 77.2600,
     ),
 
     SafePlaceModel(
@@ -91,6 +103,8 @@ class PoliceStationsData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/women_police.png",
+      latitude: 28.6250,
+      longitude: 77.2150,
     ),
 
     SafePlaceModel(
@@ -104,6 +118,8 @@ class PoliceStationsData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/railway_police.png",
+      latitude: 28.6150,
+      longitude: 77.2220,
     ),
 
     SafePlaceModel(
@@ -117,6 +133,8 @@ class PoliceStationsData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/tourist_police.png",
+      latitude: 28.6320,
+      longitude: 77.2180,
     ),
 
     SafePlaceModel(
@@ -130,6 +148,8 @@ class PoliceStationsData {
       isOpen24Hours: false,
       isGovernment: true,
       image: "assets/images/safe_places/cyber_police.png",
+      latitude: 28.6200,
+      longitude: 77.2300,
     ),
   ];
 }

@@ -13,6 +13,8 @@ class FireStationsData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/central_fire.png",
+      latitude: 28.6145,
+      longitude: 77.2095,
     ),
 
     SafePlaceModel(
@@ -26,6 +28,8 @@ class FireStationsData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/north_fire.png",
+      latitude: 28.6450,
+      longitude: 77.1980,
     ),
 
     SafePlaceModel(
@@ -39,6 +43,8 @@ class FireStationsData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/south_fire.png",
+      latitude: 28.5750,
+      longitude: 77.2120,
     ),
 
     SafePlaceModel(
@@ -52,6 +58,8 @@ class FireStationsData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/east_fire.png",
+      latitude: 28.6120,
+      longitude: 77.2450,
     ),
 
     SafePlaceModel(
@@ -65,6 +73,8 @@ class FireStationsData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/west_fire.png",
+      latitude: 28.6080,
+      longitude: 77.1750,
     ),
 
     SafePlaceModel(
@@ -78,6 +88,8 @@ class FireStationsData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/airport_fire.png",
+      latitude: 28.5560,
+      longitude: 77.1000,
     ),
 
     SafePlaceModel(
@@ -91,6 +103,8 @@ class FireStationsData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/industrial_fire.png",
+      latitude: 28.6300,
+      longitude: 77.2350,
     ),
 
     SafePlaceModel(
@@ -104,6 +118,8 @@ class FireStationsData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/harbor_fire.png",
+      latitude: 28.6180,
+      longitude: 77.2250,
     ),
 
     SafePlaceModel(
@@ -117,6 +133,8 @@ class FireStationsData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/rescue_fire.png",
+      latitude: 28.6000,
+      longitude: 77.2000,
     ),
 
     SafePlaceModel(
@@ -130,6 +148,8 @@ class FireStationsData {
       isOpen24Hours: true,
       isGovernment: true,
       image: "assets/images/safe_places/fire_hq.png",
+      latitude: 28.6220,
+      longitude: 77.2070,
     ),
   ];
 }
