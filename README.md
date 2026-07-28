@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Offline-Disaster-Helper
 Offline Disaster Helper - Emergency assistance app with SOS, first aid, disaster guides, emergency contacts, and safe places.
 =======
@@ -20,3 +21,8 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 >>>>>>> 5797791 (Shankar)
+=======
+# Project
+Offline Disaster Helper 
+
+>>>>>>> 207842b22dea624c383a70f080d64c0da1e0ab35
